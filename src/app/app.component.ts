@@ -1,6 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -8,8 +9,8 @@ import { AuthService } from './services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   template: `
-    <!-- 情況 1：已登入 (顯示完整後台 Layout：SideBar + Header + 內容) -->
-    <div *ngIf="authService.getToken()" class="flex h-screen bg-slate-100 font-sans text-slate-800 overflow-hidden">
+    <!-- 情況 A：非登入/註冊頁面 (渲染完整後台 Layout：SideBar + Header + 內容) -->
+    <div *ngIf="!isAuthPage()" class="flex h-screen bg-slate-100 font-sans text-slate-800 overflow-hidden">
       
       <!-- 側邊欄 Sidebar -->
       <aside 
@@ -83,10 +84,8 @@ import { AuthService } from './services/auth.service';
           </div>
 
           <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs">
-                Admin
-              </div>
+            <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs">
+              Admin
             </div>
             <button
               (click)="onLogout()"
@@ -104,17 +103,28 @@ import { AuthService } from './services/auth.service';
 
     </div>
 
-    <!-- 情況 2：未登入 (獨立單頁：無 SideBar、無 Header，純滿版頁面) -->
-    <div *ngIf="!authService.getToken()" class="h-screen w-screen overflow-hidden">
+    <!-- 情況 B：登入或註冊頁面 (獨立全螢幕展示，無側邊欄與 Header) -->
+    <div *ngIf="isAuthPage()" class="h-screen w-screen overflow-hidden">
       <router-outlet></router-outlet>
     </div>
   `
 })
 export class AppComponent {
-  public authService = inject(AuthService);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   isSidebarCollapsed = signal<boolean>(false);
+  isAuthPage = signal<boolean>(false);
+
+  constructor() {
+    // 依據當前 URL 即時更新是否為認證頁面
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        const url = event.urlAfterRedirects || event.url;
+        this.isAuthPage.set(url.includes('/login') || url.includes('/register'));
+      });
+  }
 
   toggleSidebar() {
     this.isSidebarCollapsed.update(state => !state);

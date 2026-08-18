@@ -7,27 +7,18 @@ import { UserManagementComponent } from '@pages/user-management/user-management.
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  // 需受登入保護的頁面
-  { 
-    path: 'home', 
-    component: HomeComponent,
-    canActivate: [authGuard]
-  },
-  { 
-    path: 'products',
-    component: ProductManagementComponent,
-    canActivate: [authGuard]
-  },
-  {
-    path: 'user-management',
-    component: UserManagementComponent,
-    canActivate: [authGuard]
-  },
+  // 1. 預設進入首頁（有登入者直接進 home；未登入者會被 authGuard 自動轉至 login）
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-  // 公開頁面 (無需保護)
+  // 2. 受保護的後台路由
+  { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+  { path: 'products', component: ProductManagementComponent, canActivate: [authGuard] },
+  { path: 'user-management', component: UserManagementComponent, canActivate: [authGuard] },
+
+  // 3. 獨立認證頁面
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  // 4. 萬用路由（放最後一行）
+  { path: '**', redirectTo: 'home' }
 ];

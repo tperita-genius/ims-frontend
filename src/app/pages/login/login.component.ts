@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -23,6 +23,13 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
+
+  ngOnInit(): void {
+    // 若已登入直接導回首頁
+    if (this.authService.getToken()) {
+      this.router.navigate(['/home']);
+    }
+  }
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
