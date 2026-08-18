@@ -24,3 +24,7 @@ jobs:
 
     - name: Run Angular Unit Tests
       run: npx ng test --watch=false --browsers=ChromeHeadless
+
+    - name: Trigger Vercel Deployment
+      if: success() && github.ref == 'refs/heads/master'
+      run: curl -X POST ${{ secrets.VERCEL_DEPLOY_HOOK }}
