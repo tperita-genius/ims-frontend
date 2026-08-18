@@ -24,7 +24,8 @@
       "@models/*": ["./src/app/models/*"],
       "@pages/*": ["./src/app/pages/*"],
       "@environments/*": ["./src/environments/*"],
-    }
+    },
+    "types": ["jasmine"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

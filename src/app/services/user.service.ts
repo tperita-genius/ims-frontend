@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '@environments/environment';
 
-export interface UserItem {
+export interface User {
   id: string;
   email: string;
   fullName: string;
@@ -11,6 +11,8 @@ export interface UserItem {
   isActive: boolean;
   createdAt: string;
 }
+
+export type UserItem = User;
 
 @Injectable({
   providedIn: 'root'

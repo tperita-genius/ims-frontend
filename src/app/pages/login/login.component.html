@@ -26,36 +26,46 @@
       {{ errorMessage }}
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 max-w-sm mx-auto mt-10">
+    
       <!-- Email 欄位 -->
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">電子郵件</label>
-        <input
-          type="email"
-          formControlName="email"
-          class="w-full rounded-xl border border-slate-300 bg-white/80 px-4 py-2.5 text-sm text-slate-800 transition focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-          placeholder="your@email.com"
-        />
+      <div class="flex flex-col">
+        <label for="email" class="mb-1 text-gray-700">信箱</label>
+        <input id="email" formControlName="email" type="email"
+          class="border rounded px-3 py-2 outline-none transition-colors" [ngClass]="{
+              'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500': 
+                (loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || isSubmitted)),
+              'border-gray-300 focus:border-blue-500': 
+                !(loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || isSubmitted))
+            }" placeholder="請輸入信箱">
+    
+        <!-- Email 專屬錯誤提示文字 -->
+        <span *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || isSubmitted)"
+          class="text-red-500 text-sm mt-1">
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">信箱不可為空</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">請輸入有效的信箱格式</span>
+        </span>
       </div>
-
-      <!-- 密碼欄位 -->
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">密碼</label>
-        <input
-          type="password"
-          formControlName="password"
-          class="w-full rounded-xl border border-slate-300 bg-white/80 px-4 py-2.5 text-sm text-slate-800 transition focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-          placeholder="••••••••"
-        />
+    
+      <!-- 密碼欄位 (結構同上) -->
+      <div class="flex flex-col">
+        <label for="password" class="mb-1 text-gray-700">密碼</label>
+        <input id="password" formControlName="password" type="password"
+          class="border rounded px-3 py-2 outline-none transition-colors" [ngClass]="{
+              'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500': 
+                (loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || isSubmitted)),
+              'border-gray-300 focus:border-blue-500': 
+                !(loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || isSubmitted))
+            }" placeholder="請輸入密碼">
+        <!-- 密碼專屬錯誤提示文字 -->
+        <span *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || isSubmitted)"
+          class="text-red-500 text-sm mt-1">
+          密碼不可為空
+        </span>
       </div>
-
-      <!-- 登入按鈕 -->
-      <button
-        type="submit"
-        [disabled]="isLoading"
-        class="w-full rounded-xl bg-indigo-600 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/30 transition hover:bg-indigo-700 active:scale-[0.99] disabled:opacity-50 cursor-pointer"
-      >
-        {{ isLoading ? '登入驗證中...' : '登入系統' }}
+    
+      <button type="submit" id="submit-btn" class="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        登入
       </button>
     </form>
 

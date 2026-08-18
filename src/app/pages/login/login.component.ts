@@ -18,6 +18,7 @@ export class LoginComponent {
 
   errorMessage = '';
   isLoading = false;
+  isSubmitted = false;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -32,6 +33,7 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    this.isSubmitted = true;
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
