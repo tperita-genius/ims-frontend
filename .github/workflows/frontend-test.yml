@@ -27,6 +27,10 @@ jobs:
     - name: Run Angular Unit Tests
       run: npx ng test --watch=false --browsers=ChromeHeadless
 
-    - name: Trigger Vercel Deployment
-      if: success() && github.ref == 'refs/heads/master'
-      run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}&build_env=TRIGGERED_BY_ACTION=true"
+    - name: 'Notify Vercel'
+      if: success()
+      uses: 'vercel/repository-dispatch/actions/status@v1'
+      with:
+        name: 'Vercel - ims-frontend: Run Angular Unit Tests' # 需與後台設定名稱對應
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
