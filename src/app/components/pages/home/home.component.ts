@@ -35,7 +35,7 @@ import { CommonModule } from '@angular/common';
           </div>
           <div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
             <div class="text-xs text-slate-400">後端技術</div>
-            <div class="text-lg font-bold text-white mt-1">.NET 9 Web API</div>
+            <div class="text-lg font-bold text-white mt-1">.NET 8 Web API</div>
           </div>
           <div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
             <div class="text-xs text-slate-400">資料庫</div>
