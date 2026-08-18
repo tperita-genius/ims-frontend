@@ -2,17 +2,16 @@ name: Frontend CI/CD - Angular Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
-# 1. 解決 Node 20 警告
 env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
 
-# 2. 解決 Resource not accessible by integration 權限問題
 permissions:
   contents: read
   checks: write
   actions: read
+  statuses: write
 
 jobs:
   test:
@@ -33,7 +32,6 @@ jobs:
     - name: Run Angular Unit Tests
       run: npx ng test --watch=false --browsers=ChromeHeadless
 
-    # 3. 測試通過後通知 Vercel Check
     - name: 'Notify Vercel'
       if: success()
       uses: 'vercel/repository-dispatch/actions/status@v1'
